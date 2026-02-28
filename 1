@@ -1,0 +1,153 @@
+import random
+
+
+class Person:
+    def __init__(self, name):
+        self.name = name
+        self.health = 100
+        self.mood = 100
+        self.hunger = 100
+        self.money = 50
+        self.day = 1
+        self.education = 0
+        self.level = 1
+        self.job = "Безробітний"
+        self.house = False
+
+    def show_status(self):
+        print("\n======================")
+        print(f"📅 День: {self.day}")
+        print(f"👤 Ім'я: {self.name}")
+        print(f"⭐ Рівень: {self.level}")
+        print(f"💼 Робота: {self.job}")
+        print(f"🎓 Освіта: {self.education}")
+        print(f"❤️ Здоров'я: {self.health}")
+        print(f"😊 Настрій: {self.mood}")
+        print(f"🍔 Ситість: {self.hunger}")
+        print(f"💰 Гроші: {self.money}")
+        print(f"🏠 Будинок: {'Є' if self.house else 'Немає'}")
+        print("======================")
+
+    def study(self):
+        print("Ти навчаєшся 📚")
+        self.education += 10
+        self.mood -= 5
+        self.hunger -= 10
+        self.check_job()
+
+    def work(self):
+        if self.job == "Безробітний":
+            print("У тебе немає роботи!")
+            return
+
+        salary = 20 * self.level
+        print(f"Ти працюєш як {self.job} і заробляєш {salary}$")
+        self.money += salary
+        self.mood -= 10
+        self.hunger -= 15
+
+    def eat(self):
+        if self.money >= 10:
+            print("Ти поїв 🍕")
+            self.hunger += 25
+            self.money -= 10
+        else:
+            print("Недостатньо грошей!")
+
+    def sleep(self):
+        print("Ти поспав 😴")
+        self.health += 15
+        self.mood += 10
+        self.hunger -= 10
+
+    def relax(self):
+        print("Ти відпочив 🎮")
+        self.mood += 20
+        self.hunger -= 10
+
+    def buy_house(self):
+        if self.money >= 200 and not self.house:
+            self.money -= 200
+            self.house = True
+            print("Ти купив будинок! 🏠")
+        else:
+            print("Недостатньо грошей або вже маєш будинок.")
+
+    def random_event(self):
+        event = random.randint(1, 5)
+        if event == 1:
+            print("🎲 Ти виграв 50$!")
+            self.money += 50
+        elif event == 2:
+            print("🎲 Ти захворів...")
+            self.health -= 20
+        elif event == 3:
+            print("🎲 Ти знайшов нових друзів!")
+            self.mood += 15
+        elif event == 4:
+            print("🎲 Несподівані витрати -30$")
+            self.money -= 30
+
+    def check_job(self):
+        if self.education >= 50 and self.job == "Безробітний":
+            self.job = "Офісний працівник"
+            print("🎉 Ти отримав роботу!")
+        if self.education >= 100:
+            self.level = 2
+            self.job = "Програміст"
+        if self.education >= 200:
+            self.level = 3
+            self.job = "Бізнес мен"
+
+    def next_day(self):
+        self.day += 1
+        self.hunger -= 10
+
+        if self.hunger <= 0:
+            self.health -= 20
+            print("⚠️ Ти голодний! Здоров'я падає!")
+
+        self.random_event()
+
+        if self.health <= 0:
+            print("💀 Ти програв!")
+            return False
+        return True
+
+
+name = input("Введи ім'я персонажа: ")
+player = Person(name)
+
+while True:
+    player.show_status()
+    print("\nОберіть дію:")
+    print("1 - Навчатися")
+    print("2 - Працювати")
+    print("3 - Їсти")
+    print("4 - Спати")
+    print("5 - Відпочити")
+    print("6 - Купити будинок")
+    print("7 - Вийти")
+
+    choice = input("Твій вибір: ")
+
+    if choice == "1":
+        player.study()
+    elif choice == "2":
+        player.work()
+    elif choice == "3":
+        player.eat()
+    elif choice == "4":
+        player.sleep()
+    elif choice == "5":
+        player.relax()
+    elif choice == "6":
+        player.buy_house()
+    elif choice == "7":
+        print("Гру завершено.")
+        break
+    else:
+        print("Невірний вибір!")
+
+    if not player.next_day():
+        break
